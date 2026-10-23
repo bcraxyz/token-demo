@@ -13,15 +13,28 @@ from google.adk.tools.authenticated_function_tool import AuthenticatedFunctionTo
 async def send_test_email(credential: AuthCredential) -> dict:
     """Sends a test email through Resend and reports the credential the agent received."""
     http = credential.http
-    token = http.credentials.token if http.credentials and http.credentials.token else next(iter(http.additional_headers.values()))
-    async with httpx.AsyncClient() as client:
+    if http.credentials and http.credentials.token:
+        header, token = "Authorization", http.credentials.token
+    else:
+        header, token = next(iter(http.additional_headers.items()))
+    async with httpx.AsyncClient(timeout=10) as client:
         sent = await client.post(
             "https://api.resend.com/emails",
             headers={"Authorization": f"Bearer {token}"},
             json={"from": "onboarding@resend.dev", "to": "delivered@resend.dev", "subject": "token-demo", "text": "Sent by agent."},
-            timeout=10,
         )
-    return {"agent_sees": token[:7], "length": len(token), "resend_status": sent.status_code}
+        echo = await client.get("https://httpbin.org/anything")
+    seen = echo.json() if echo.status_code == 200 else {"origin": f"HTTP {echo.status_code}", "headers": {}}
+    return {
+        "agent_sees": token[:7],
+        "header": header,
+        "length": len(token),
+        "resend_status": sent.status_code,
+        "destination_sees": {
+            "ip": seen["origin"],
+            **{k: "present" for k in seen["headers"] if k.lower().startswith(("x-goog", "x-forwarded", "forwarded", "via"))},
+        },
+    }
 
 
 CredentialManager.register_auth_provider(GcpAuthProvider())
