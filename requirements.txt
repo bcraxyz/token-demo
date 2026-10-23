@@ -1,4 +1,5 @@
-google-cloud-aiplatform[agent_engines,adk]
+google-cloud-agentplatform[adk,runtimes]
+google-cloud-agentidentitycredentials
 cloudpickle
 pydantic
 requests
