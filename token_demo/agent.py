@@ -1,8 +1,8 @@
 # token_demo/agent.py
 import os
-
-import google.auth
 import requests
+import google.auth
+from google.adk.models import Gemini
 from google.adk.agents import Agent
 from google.auth.transport.requests import Request
 
@@ -34,7 +34,7 @@ def send_test_email() -> dict:
 
 root_agent = Agent(
     name="token_demo",
-    model="gemini-2.5-flash",
+    model=Gemini(model="gemini-3.8-flash", client_kwargs={"enterprise": True, "location": "global"}),
     instruction="When asked to send a test email, call send_test_email and return its result as-is.",
     tools=[send_test_email],
 )
