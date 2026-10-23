@@ -30,6 +30,8 @@ config = {
 }
 if args.gateway:
     config["agent_gateway_config"] = {"agent_to_anywhere_config": {"agent_gateway": args.gateway}}
+    config["env_vars"]["GOOGLE_API_PREVENT_AGENT_TOKEN_SHARING_FOR_GCP_SERVICES"] = "false"
+    config["env_vars"]["GOOGLE_API_USE_CLIENT_CERTIFICATE"] = "false"
 
 existing = list(client.agent_engines.list(config={"filter": 'display_name="token-demo"'}))
 if existing:
