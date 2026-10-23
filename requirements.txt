@@ -1,4 +1,3 @@
-google-cloud-agentplatform[adk,agent_engines]
 google-cloud-aiplatform[adk,agent_engines]
 google-cloud-agentidentitycredentials
 cloudpickle
