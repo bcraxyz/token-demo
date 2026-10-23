@@ -5,6 +5,7 @@ import os
 import vertexai
 from vertexai import types
 from vertexai.agent_engines import AdkApp
+from importlib.metadata import version
 
 from token_demo.agent import root_agent
 
