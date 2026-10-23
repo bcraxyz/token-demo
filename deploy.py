@@ -18,7 +18,8 @@ config = {
     "display_name": "token-demo",
     "staging_bucket": f"gs://{project}-token-demo",
     "requirements": [
-        f"google-cloud-agentplatform[adk,runtimes]=={version('google-cloud-agentplatform')}",
+        f"google-cloud-agentplatform[adk,agent_engines]=={version('google-cloud-agentplatform')}",
+        f"google-cloud-aiplatform[adk,agent_engines]=={version('google-cloud-aiplatform')}",
         f"google-adk=={version('google-adk')}",
         "google-cloud-agentidentitycredentials",
         "cloudpickle",
