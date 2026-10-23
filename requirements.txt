@@ -1,3 +1,4 @@
-# requirements.txt
 google-cloud-aiplatform[agent_engines,adk]
+cloudpickle
+pydantic
 requests
