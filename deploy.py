@@ -26,7 +26,7 @@ config = {
         "requests",
     ],
     "extra_packages": ["token_demo"],
-    "env_vars": {"AUTH_PROVIDER": os.environ["AUTH_PROVIDER"]},
+    "env_vars": {"AUTH_PROVIDER": f"projects/{project}/locations/{location}/authProviders/resend"},
 }
 if args.gateway:
     config["agent_gateway_config"] = {"agent_to_anywhere_config": {"agent_gateway": args.gateway}}
