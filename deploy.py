@@ -13,10 +13,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--gateway")
 args = parser.parse_args()
 
-client = vertexai.Client(project=os.environ["PROJECT"], location=os.environ["LOCATION"])
+project, location = os.environ["PROJECT"], os.environ["LOCATION"]
+client = vertexai.Client(project=project, location=location)
 config = {
     "display_name": "token-demo",
-    "staging_bucket": os.environ["STAGING_BUCKET"],
+    "staging_bucket": f"gs://{project}-token-demo",
     "requirements": [
         f"google-cloud-aiplatform[agent_engines,adk]=={version('google-cloud-aiplatform')}",
         f"google-adk=={version('google-adk')}",
