@@ -1,24 +1,16 @@
-# token_demo/agent.py
 import os
+
 import requests
-import google.auth
-from google.adk.models import Gemini
 from google.adk.agents import Agent
-from google.auth.transport.requests import Request
+from google.adk.models import Gemini
+from google.cloud.agentidentitycredentials_v1 import AuthProviderCredentialsServiceClient
 
 
 def send_test_email() -> dict:
     """Fetches the Resend key from Auth Manager, sends a test email, and reports what the agent held."""
-    creds, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
-    creds.refresh(Request())
-    resp = requests.post(
-        f"https://agentidentitycredentials.googleapis.com/v1/{os.environ['AUTH_PROVIDER']}/credentials:retrieve",
-        headers={"Authorization": f"Bearer {creds.token}"},
-        json={"user_id": "demo"},
-        timeout=10,
-    )
-    resp.raise_for_status()
-    token = resp.json()["success"]["token"]
+    token = AuthProviderCredentialsServiceClient(transport="rest").retrieve_credentials(
+        auth_provider=os.environ["AUTH_PROVIDER"], user_id="demo"
+    ).success.token
     sent = requests.post(
         "https://api.resend.com/emails",
         headers={"Authorization": f"Bearer {token}"},
@@ -34,7 +26,7 @@ def send_test_email() -> dict:
 
 root_agent = Agent(
     name="token_demo",
-    model=Gemini(model="gemini-3.8-flash", client_kwargs={"enterprise": True, "location": "global"}),
+    model=Gemini(model="gemini-3.5-flash", client_kwargs={"enterprise": True, "location": "global"}),
     instruction="When asked to send a test email, call send_test_email and return its result as-is.",
     tools=[send_test_email],
 )
