@@ -17,7 +17,13 @@ client = vertexai.Client(project=os.environ["PROJECT"], location=os.environ["LOC
 config = {
     "display_name": "token-demo",
     "staging_bucket": os.environ["STAGING_BUCKET"],
-    "requirements": "requirements.txt",
+    "requirements": [
+        f"google-cloud-aiplatform[agent_engines,adk]=={version('google-cloud-aiplatform')}",
+        f"google-adk=={version('google-adk')}",
+        "cloudpickle",
+        "pydantic",
+        "requests",
+    ],
     "extra_packages": ["token_demo"],
     "env_vars": {"AUTH_PROVIDER": os.environ["AUTH_PROVIDER"]},
 }
